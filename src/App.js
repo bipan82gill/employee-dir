@@ -1,48 +1,69 @@
 import React, { Component } from "react";
-import EmployeeCard from "./components/EmployeeCard";
-import Row from './components/Row';
-import EmployeeHeader from "./components/EmployeeHeader";
-import employees from "./employees.json";
-import Container from './components/Container';
-
+// import EmployeeCard from "./components/EmployeeCard";
+// import Row from './components/Row';
+// import EmployeeHeader from "./components/EmployeeHeader";
+// import employees from "./employees.json";
+// import Container from './components/Container';
+import ReactTable from "react-table";
+// import "react-table/react-table.css";
 
 
 class App extends Component {
-  // Setting this.state.employees to the employees json array
-  state = {
-    employees
-  };
+  
+ constructor(props){
+   super(props);
 
-  removeEmployee = id => {
-    // Filter this.state.employees for employees with an id not equal to the id being removed
-    const employees= this.state.employees.filter(employee => employee.id !== id);
-    // Set this.state.employees equal to the new employees array
-    this.setState({ employees});
-  };
-
-  // Map over this.state.employees and render a EmployeeCard component for each employee object
-  render() {
-    return (
-      <Container>
-        <EmployeeHeader> Employees List</EmployeeHeader>
-        <Row className="row"/>
-        
-        {this.state.employees.map(employee => (
-          <EmployeeCard
-            removeEmployee={this.removeEmployee}
-            id={employee.id}
-            key={employee.id}
-            name={employee.employee_name}
-            image={employee.profile_image}
-            age={employee.employee_age}
-            salary={employee.employee_salary}
-          />
-        ))}
-      
-       
-     </Container>
-    );
+   this.state={
+    users:[]
+   }
+ }
+  componentDidMount(){
+  const url ="https://jsonplaceholder.typicode.com/users" ;
+  fetch(url,
+            {method:"GET"})
+            .then(response => response.json()).then(users => {
+              console.log("users", users);
+            this.setState({users:users});
+   });
   }
+  render(){
+    const columns = [
+      {
+        Header:"ID",
+        accessor:"id"
+      },
+      {
+        Header:"Name",
+        accessor:"name"
+      },
+      {
+        Header:"UserName",
+        accessor:"username"
+      },
+      {
+        Header:"Phone",
+        accessor:"phone",
+        filterable:false,
+        sortable:false
+      },
+      {
+        Header:"Website",
+        accessor:"website",
+        filterable:false,
+        sortable:false
+      }
+      
+    ]
+    return(
+    <ReactTable
+     columns ={columns}
+     data={this.state.users}
+     
+     >
+      </ReactTable>
+  
+  )
+}
 }
 
 export default App;
